@@ -1,1 +1,1 @@
-python3 -m app
+python -m app
