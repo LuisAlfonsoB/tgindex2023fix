@@ -8,6 +8,8 @@ from aiohttp import web
 from aiohttp_session import session_middleware
 from aiohttp_session.cookie_storage import EncryptedCookieStorage
 
+from markupsafe import Markup
+
 from .telegram import Client
 from .routes import setup_routes
 from .views import Views, middleware_factory
