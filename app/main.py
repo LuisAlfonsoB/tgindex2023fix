@@ -3,6 +3,7 @@ import pathlib
 import logging
 
 import aiohttp_jinja2
+import jinja2
 from markupsafe import Markup
 
 from aiohttp import web
