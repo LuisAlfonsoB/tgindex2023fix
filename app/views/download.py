@@ -87,12 +87,40 @@ class Download(BaseView):
         else:
             body = None
 
-        headers = {
+        # headers={
+        #     "Connection":"keep-alive",
+        #     "Content-Type": mime_type,
+        #     "Content-Range": f"bytes {offset}-{limit}/{size}",
+        #     "Accept-Ranges": "bytes",
+        #     "Content-Disposition": f'attachment; filename="{file_name}"',
+        #     "Transfer-Encoding":"chunked",
+        #    #"Content-Length": str(limit - offset)
+
+        # }
+
+        # r=  web.Response(
+        #     status=206 if req.http_range.start else 200,
+        #     body=body,
+        #     headers=headers
+        # )
+
+        # r.enable_chunked_encoding()
+        # return r
+
+        return_resp = web.Response(
+        status=206 if req.http_range.start else 200,
+        body=body,
+        headers={
+            "Access-Control-Allow-Origin": "*",
             "Content-Type": mime_type,
             "Content-Range": f"bytes {offset}-{limit}/{size}",
-            "Content-Length": str(limit - offset),
-            "Accept-Ranges": "bytes",
             "Content-Disposition": f'attachment; filename="{file_name}"',
-        }
+            "Accept-Ranges": "bytes",
+            # "Content-Length": f"{limit-offset}"
+           }
+        )
 
-        return web.Response(status=206 if offset else 200, body=body, headers=headers)
+        if return_resp.status == 200:
+          return_resp.headers.add("Content-Length", str(size))
+
+        return return_resp
