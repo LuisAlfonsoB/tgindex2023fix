@@ -1,8 +1,8 @@
 FROM python:3.10
 
-WORKDIR /gapextesttg
+WORKDIR /tg-index2023
 
-COPY . /gapextesttg
+COPY . /tg-index2023
 
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
