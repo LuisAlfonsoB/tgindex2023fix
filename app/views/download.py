@@ -1,26 +1,22 @@
 import logging
 
 from aiohttp import web
-from telethon.tl.custom import Message
 
 from app.util import get_file_name
 from app.config import block_downloads
-from .base import BaseView
 
 
 log = logging.getLogger(__name__)
 
 
-class Download(BaseView):
-    async def download_get(self, req: web.Request) -> web.Response:
+class Download:
+    async def download_get(self, req):
         return await self.handle_request(req)
 
-    async def download_head(self, req: web.Request) -> web.Response:
+    async def download_head(self, req):
         return await self.handle_request(req, head=True)
 
-    async def handle_request(
-        self, req: web.Request, head: bool = False
-    ) -> web.Response:
+    async def handle_request(self, req, head=False):
         if block_downloads:
             return web.Response(status=403, text="403: Forbiden" if not head else None)
 
@@ -30,9 +26,7 @@ class Download(BaseView):
         chat_id = chat["chat_id"]
 
         try:
-            message: Message = await self.client.get_messages(
-                entity=chat_id, ids=file_id
-            )
+            message = await self.client.get_messages(entity=chat_id, ids=file_id)
         except Exception:
             log.debug(f"Error in getting message {file_id} in {chat_id}", exc_info=True)
             message = None
@@ -53,7 +47,7 @@ class Download(BaseView):
         mime_type = message.file.mime_type
 
         try:
-           request = req
+            request = req
             range_header = request.headers.get('Range', 0)
             if range_header:
               range_data = range_header.replace('bytes=', '').split('-')
@@ -103,10 +97,10 @@ class Download(BaseView):
         #     body=body,
         #     headers=headers
         # )
-
+        
         # r.enable_chunked_encoding()
         # return r
-
+        
         return_resp = web.Response(
         status=206 if req.http_range.start else 200,
         body=body,
