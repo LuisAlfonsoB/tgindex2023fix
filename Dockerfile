@@ -1,8 +1,8 @@
 FROM python:3.10
 
-WORKDIR /tg-index-2023
+WORKDIR /tgindex2023fix
 
-COPY . /tg-index-2023
+COPY . /tgindex2023fix
 
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
